@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corrin Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Corrin Generator</h1>
+    <button id="generateButton">Generate Corrin</button>
+    <pre id="result"></pre>
+
+    <script>
+        const boonsAndBanes = ["Hp", "Str", "Mag", "Skl", "Spd", "Lck", "Def", "Res"];
+        const classTree = {
+            "Nohr Prince(ss)": ["Nohr Noble", "Hoshido Noble", "Lodestar", "Great Lord"],
+            "Samurai": ["Swordmaster", "Master of Arms", "Great Lord"],
+            "Villager": ["Merchant", "Master of Arms"],
+            "Apothecary": ["Merchant", "Mechanist"],
+            "Ninja": ["Master Ninja", "Mechanist", "Dread Fighter", "Butler/Maid"],
+            "Oni Savage": ["Oni Chieftain", "Blacksmith", "Vanguard"],
+            "Spear Fighter": ["Spear Master", "Basara"],
+            "Diviner": ["Onmyoji", "Basara", "Dread Fighter", "Grandmaster"],
+            "Monk": ["Great Master", "Onmyoji"],
+            "Shrine Maiden": ["Priestess", "Onmyoji"],
+            "Sky Knight": ["Falcon Knight", "Kinshi Knight", "Dark Falcon"],
+            "Archer": ["Sniper", "Kinshi Knight", "Ballistician"],
+            "Kitsune": "Nine-Tails",
+            "Cavalier": ["Paladin", "Great Knight", "Dark Falcon", "Dark Knight"],
+            "Knight": ["General", "Great Knight", "Ballistician"],
+            "Fighter": ["Berserker", "Hero"],
+            "Mercenary": ["Hero", "Bow Knight", "Lodestar", "Vanguard"],
+            "Outlaw": ["Adventurer", "Bow Knight"],
+            "Wyvern Rider": ["Wyvern Lord", "Malig Knight"],
+            "Dark Mage": ["Sorcerer", "Dark Knight", "Dark Mage", "Witch"],
+            "Troubadour": ["Strategist", "Butler/Maid"],
+            "Wolfskin": "Wolfssegner",
+            "Lancer": ["Great Lord", "Ballistician"]
+        };
+
+        const skills = [
+            "Elbow Room", "HP+5", "Quick Draw", "Counter", "Darting Blow",
+            "Death Blow", "Renewal", "Gamble", "Aegis", "Bowbreaker", 
+            "Dancing Blade", "Demoiselle", "Lancebreaker", "Lifetaker", "Miracle",
+            "Quixotic", "Rally Strength", "Seal Defense", "Amaterasu", "Astra", 
+            "Charm", "Evenhanded", "Future Sight", "Gentilhomme", "Heavy Blade", 
+            "Movement +1", "Pavise", "Profiteer", "Rally Speed", "Shadowgift",
+            "Shelter", "Spendthrift", "Swap", "Vengeance", "Warding Blow",
+            "Witch's Brew", "Aether", "Armored Blow", "Better Odds", "Certain Blow",
+            "Countermagic", "Dragon Ward", "Dual Striker", "Duelist's Blow", "Good Fortune",
+            "Grisly Wound", "Heartseeker", "Hoshidan Unity", "Ignis", "Luna", "Malefic Aura",
+            "Natural Cover", "Nohrian Trust", "Odd Shaped", "Quick Salve", "Rally Defense",
+            "Savage Blow", "Seal Speed", "Seal Strength", "Shove", "Skilltaker",
+            "Strength +2", "Strong Riposte", "Swordbreaker", "Tactical Advice", "Veteran Intuition",
+            "Voice of Peace", "Wary Fighter", "Air Superiority", "Axebreaker", "Camaraderie",
+            "Clarity", "Defender", "Defense +2", "Dragon Fang", "Dual Guardsman",
+            "Even Better", "Even Keel", "Foreign Princess", "Golembane", "Iron Will",
+            "Lethality", "Live to Serve", "Locktouch", "Luck +4", "Lucktaker",
+            "Lucky 7", "Lunge", "Magic +2", "Pass", "Poison Strike",
+            "Potent Potion", "Rally Luck", "Rally Magic", "Rally Resistance", "Rally Skill",
+            "Relief", "Resistance +2", "Salvage Blow", "Seal Magic", "Seal Resistance",
+            "Shurikenbreaker", "Skill +2", "Sol", "Solidarity", "Speed +2",
+            "Tomebreaker", "Underdog"
+        ];
+
+        function getRandomFromList(options) {
+            const index = Math.floor(Math.random() * options.length);
+            return options[index]; // Return an item without removing it
+        }
+
+        function getRandomFromDict() {
+            const baseClass = Object.keys(classTree)[Math.floor(Math.random() * Object.keys(classTree).length)];
+            const possiblePromos = classTree[baseClass];
+            const promoClass = Array.isArray(possiblePromos)
+                ? possiblePromos[Math.floor(Math.random() * possiblePromos.length)]
+                : possiblePromos;
+            return { baseClass, promoClass };
+        }
+
+        function generateCorrin() {
+            const name = Math.random().toString(36).substring(2, 14);
+
+            // Ensure boon and bane are not the same
+            let boon, bane;
+            do {
+                boon = getRandomFromList(boonsAndBanes);
+                bane = getRandomFromList(boonsAndBanes);
+            } while (boon === bane);
+
+            const { baseClass, promoClass } = getRandomFromDict();
+
+            // Ensure personal skills are not the same
+            let personal1, personal2;
+            do {
+                personal1 = getRandomFromList(skills);
+                personal2 = getRandomFromList(skills);
+            } while (personal1 === personal2);
+
+            const personals = [personal1, personal2];
+            const result = `Name: ${name}\nBoon: ${boon}\nBane: ${bane}\nBase Class: ${baseClass}\nPromoted Class: ${promoClass}\nPersonals: ${personals.join(', ')}`;
+            document.getElementById('result').textContent = result;
+        }
+
+        document.getElementById('generateButton').addEventListener('click', generateCorrin);
+    </script>
+</body>
+</html>
